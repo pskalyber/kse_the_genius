@@ -110,7 +110,7 @@ def mypost():
         order by post.publish_date desc limit ?''',
         [session['user_id'], PER_PAGE]))
 
-@app.route('/')
+@app.route('/test')
 def public_request(post_id=None):
     """Displays the latest post of all users."""
     posts = query_db('''
@@ -128,11 +128,29 @@ def public_request(post_id=None):
     else:
         return render_template('timeline.html', posts=posts)
 
-
 @app.route('/course')
 def course():
     """Displays the course list"""
     return render_template('course.html')
+
+@app.route('/')
+@app.route('/ranking')
+def ranking(post_id=None):
+    """Displays the latest post of all users."""
+    posts = query_db('''
+        select post.*, user.* from post, user
+        where post.author_id = user.user_id
+        order by post.publish_date desc limit ?''', [PER_PAGE])
+    
+    if post_id:
+        selected_post = query_db('''
+            select post.*, user.* from post, user
+            where post_id = ?
+            order by post.publish_date desc limit ?''', [post_id, PER_PAGE], one=True)
+        print selected_post
+        return render_template('ranking.html', posts=posts, selected_post=selected_post)
+    else:
+        return render_template('ranking.html', posts=posts)
 
 @app.route('/<username>')
 def user_timeline(username):
@@ -155,7 +173,7 @@ def user_timeline(username):
             profile_user=profile_user)
 
 @app.route('/quiz')
-def add_post():
+def quiz():
     """add a new post"""
     return render_template('quiz.html')
 
@@ -205,7 +223,7 @@ def login():
         else:
             flash('You were logged in')
             session['user_id'] = user['user_id']
-            return redirect(url_for('public_request'))
+            return redirect(url_for('course'))
     return render_template('login.html', error=error)
 
 

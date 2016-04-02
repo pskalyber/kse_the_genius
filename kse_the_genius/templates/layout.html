@@ -14,12 +14,11 @@
 	<h1>KSE THE GENIUS</h1>
 	<div class="navigation">
 		{% if g.user %} 
-			<a href="{{ url_for('public_request') }}">Home</a> |
-			<a href="{{ url_for('logout') }}">Course</a> |
-			<a href="{{ url_for('logout') }}">Ranking</a> |
+			<a href="{{ url_for('course') }}">Course</a> |
+			<a href="{{ url_for('ranking') }}">Ranking</a> |
+			<a href="{{ url_for('course') }}">My info</a> |
 			<a href="{{ url_for('logout') }}">Logout ({{ g.user.username }})</a>
 		{% else %} 
-			<a href="{{ url_for('public_request') }}">Home</a> | 
 			<a href="{{ url_for('register') }}">Sign Up</a> | 
 			<a href="{{ url_for('login') }}">Sign In</a> 
 		{% endif %}
