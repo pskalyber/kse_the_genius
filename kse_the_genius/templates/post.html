@@ -1,11 +1,17 @@
 {% extends "layout.html" %}
-{% block title %}New Post{% endblock %}
+{% block title %}Quiz{% endblock %}
 {% block body %}
 	<div class="page-title">
 		<span>{{ self.title() }}</span>
 	</div>
 	
 	{% if error %}<div class=error><strong>Error:</strong> {{ error }}</div>{% endif %}
+	
+	과목명 여기
+	
+	문제 설명 여기
+	
+	
 	<form action="{{ url_for('post_process') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
 
 	  	<div class="form-group">
@@ -54,17 +60,9 @@
 	    	</div>
 	  	</div>
 	  	
-	  	<div class="form-group">
-	    	<label class="col-sm-2 control-label">사진</label>
-	    	<div class="col-sm-8">
-	    	<input type="file" class="form-control" name="file" 
-	    		placeholder="">
-	    	</div>
-	  	</div>
-	  	
 	    <div class="form-group">
     		<div class="col-sm-offset-2 col-sm-8">
-      		<button type="submit" class="btn btn-primary">공유</button>
+      		<button type="submit" class="btn btn-primary">Submit</button>
     		</div>
   		</div>
   	</form>

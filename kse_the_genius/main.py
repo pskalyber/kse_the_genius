@@ -6,7 +6,7 @@
     A KSE Quiz application written with Flask and sqlite3.
 
     :copyright: (c) 2015 by Sangkeun Park.
-    :license: KIAST, see LICENSE for more details.
+    :license: KAIST, see LICENSE for more details.
 """
 
 from __future__ import with_statement
@@ -129,6 +129,11 @@ def public_request(post_id=None):
     else:
         return render_template('timeline.html', posts=posts)
 
+
+@app.route('/course')
+def course():
+    """Displays the course list"""
+    return render_template('course.html')
 
 @app.route('/<username>')
 def user_timeline(username):
