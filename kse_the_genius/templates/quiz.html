@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block title %}Quiz{% endblock %}
+{% block body %}
+	<div class="page-title">
+		<span>Course Name (to be)</span>
+	</div>
+	
+	{% if error %}<div class=error><strong>Error:</strong> {{ error }}</div>{% endif %}
+
+	<div class="bg-info">
+		<blockquote>
+			<p>14. Which one describes best following: New users suffer from insufficient number of items to enable the system to capture their preference </p>
+			<footer>HINT: This is <cite title="Source Title"> xxx </cite> bhlablha</footer>
+		</blockquote>
+	</div>
+	
+	<form action="{{ url_for('post_process') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+	  	
+		<div class="form-group">
+		
+			<div class="col-sm-offset-0 col-sm-12">
+				<div class="checkbox" class="form-control" name="1">
+					<label class="col-sm-12">
+						<input type="checkbox"> Cold start
+					</label>
+				</div>
+			</div>
+			
+			<div class="col-sm-offset-0 col-sm-12">
+				<div class="checkbox" class="form-control" name="1">
+					<label class="col-sm-12">
+						<input type="checkbox"> Remember medfdf df df af a d af dfd fa a d fa dfa d fa d fa dfa d af af  f da d f mber medfdf df df af a d af dfd fa a d fa dfa d mber medfdf df df af a d af dfd fa a d fa dfa dRemember medfdf df df af a d af dfd fa a d fa dfa d fa d fa dfa d af af  f da d f mber medfdf df df af a d af dfd fa a d fa dfa d mber medfdf df df af a d af dfd fa a d fa dfa dRemember medfdf df df af a d af dfd fa a d fa dfa d fa d fa dfa d af af  f da d f mber medfdf df df af a d af dfd fa a d fa dfa d mber medfdf df df af a d af dfd fa a d fa dfa d
+					</label>
+				</div>
+			</div>
+			
+			<div class="col-sm-offset-0 col-sm-12">
+				<div class="checkbox" class="form-control" name="1">
+					<label class="col-sm-12">
+						<input type="checkbox"> Gray sheep 
+					</label>
+				</div>
+			</div>
+			
+			<div class="col-sm-offset-0 col-sm-12">
+				<div class="checkbox" class="form-control" name="1">
+					<label class="col-sm-12">
+						<input type="checkbox"> Shilling attacks 
+					</label>
+				</div>
+			</div>
+		</div>
+	  	
+	    <div class="form-group">
+    		<div class="col-sm-offset-2 col-sm-8">
+      		<button type="submit" class="btn btn-primary">Submit</button>
+    		</div>
+  		</div>
+  	</form>
+{% endblock %}

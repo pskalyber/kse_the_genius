@@ -111,7 +111,6 @@ def mypost():
         [session['user_id'], PER_PAGE]))
 
 @app.route('/')
-@app.route('/posts/<int:post_id>')
 def public_request(post_id=None):
     """Displays the latest post of all users."""
     posts = query_db('''
@@ -155,11 +154,10 @@ def user_timeline(username):
             [profile_user['user_id'], PER_PAGE]), followed=followed,
             profile_user=profile_user)
 
-
-@app.route('/posts/new')
+@app.route('/quiz')
 def add_post():
     """add a new post"""
-    return render_template('post.html')
+    return render_template('quiz.html')
 
 
 @app.route('/post_process', methods=['POST'])

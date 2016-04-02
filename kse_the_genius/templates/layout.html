@@ -15,6 +15,8 @@
 	<div class="navigation">
 		{% if g.user %} 
 			<a href="{{ url_for('public_request') }}">Home</a> |
+			<a href="{{ url_for('logout') }}">Course</a> |
+			<a href="{{ url_for('logout') }}">Ranking</a> |
 			<a href="{{ url_for('logout') }}">Logout ({{ g.user.username }})</a>
 		{% else %} 
 			<a href="{{ url_for('public_request') }}">Home</a> | 
@@ -22,6 +24,7 @@
 			<a href="{{ url_for('login') }}">Sign In</a> 
 		{% endif %}
 	</div>
+	
 	{% with flashes = get_flashed_messages() %} {% if flashes %}
 	<ul class="flashes">
 		{% for message in flashes %}
@@ -30,6 +33,6 @@
 		{% endif %} 
 	{% endwith %}
 	<div class="body">{% block body %}{% endblock %}</div>
-	<div class="footer">Copyright © 2015 ICLAB @ KAIST. All rights reserved.</div>
+	<div class="footer">Copyright © 2016 KSE Student Union @ KAIST. All rights reserved.</div>
 </div>
 </html>
