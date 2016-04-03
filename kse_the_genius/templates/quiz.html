@@ -2,59 +2,74 @@
 {% block title %}Quiz{% endblock %}
 {% block body %}
 	<div class="page-title">
-		<span>Course Name (to be)</span>
+		<span>{{ prof }}'s Course</span>
 	</div>
 	
 	{% if error %}<div class=error><strong>Error:</strong> {{ error }}</div>{% endif %}
 
+	{% if quiz %}
 	<div class="bg-info">
 		<blockquote>
-			<p>14. Which one describes best following: New users suffer from insufficient number of items to enable the system to capture their preference </p>
-			<footer>HINT: This is <cite title="Source Title"> xxx </cite> bhlablha</footer>
+			<p>{{ quiz.quiz_id }}. {{ quiz.question }}</p>
+			<!-- <footer>HINT: This is <cite title="Source Title"> xxx </cite> bhlablha</footer>  -->
 		</blockquote>
 	</div>
 	
-	<form action="{{ url_for('post_process') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+	<form action="{{ url_for('quiz_processing') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
 	  	
 		<div class="form-group">
 		
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="1">
+				<div class="checkbox" class="form-control" name="answer1">
 					<label class="col-sm-12">
-						<input type="checkbox"> Cold start
+						<input type="checkbox"> {{ quiz.answer1 }}
 					</label>
 				</div>
 			</div>
 			
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="1">
+				<div class="checkbox" class="form-control" name="answer2">
 					<label class="col-sm-12">
-						<input type="checkbox"> Remember medfdf df df af a d af dfd fa a d fa dfa d fa d fa dfa d af af  f da d f mber medfdf df df af a d af dfd fa a d fa dfa d mber medfdf df df af a d af dfd fa a d fa dfa dRemember medfdf df df af a d af dfd fa a d fa dfa d fa d fa dfa d af af  f da d f mber medfdf df df af a d af dfd fa a d fa dfa d mber medfdf df df af a d af dfd fa a d fa dfa dRemember medfdf df df af a d af dfd fa a d fa dfa d fa d fa dfa d af af  f da d f mber medfdf df df af a d af dfd fa a d fa dfa d mber medfdf df df af a d af dfd fa a d fa dfa d
+						<input type="checkbox"> {{ quiz.answer2 }}
 					</label>
 				</div>
 			</div>
 			
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="1">
+				<div class="checkbox" class="form-control" name="answer3">
 					<label class="col-sm-12">
-						<input type="checkbox"> Gray sheep 
+						<input type="checkbox"> {{ quiz.answer3 }} 
 					</label>
 				</div>
 			</div>
 			
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="1">
+				<div class="checkbox" class="form-control" name="answer4">
 					<label class="col-sm-12">
-						<input type="checkbox"> Shilling attacks 
+						<input type="checkbox"> {{ quiz.answer4 }}
 					</label>
 				</div>
 			</div>
+			
+			<input type="hidden" name="prof" value="{{ prof }}">
+			
+			<input type="hidden" name="user_id" value="{{ g.user.user_id }}">
+			
 		</div>
 	  	
 	    <div class="form-group">
-    		<div class="col-sm-offset-2 col-sm-8">
+    		<div class="col-sm-offset-0 col-sm-8">
       		<button type="submit" class="btn btn-primary">Submit</button>
     		</div>
   		</div>
   	</form>
+  	
+  	{% else %}
+  	<div class="bg-success">
+		<blockquote>
+			<p>You finished all of {{ prof }}'s quizzes</p>
+			<!-- <footer>HINT: This is <cite title="Source Title"> xxx </cite> bhlablha</footer>  -->
+		</blockquote>
+	</div>
+  	{% endif %}
 {% endblock %}

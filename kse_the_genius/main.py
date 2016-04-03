@@ -5,7 +5,7 @@
 
     A KSE Quiz application written with Flask and sqlite3.
 
-    :copyright: (c) 2015 by Sangkeun Park.
+    :copyright: (c) 2016 by Sangkeun Park.
     :license: KAIST, see LICENSE for more details.
 """
 
@@ -137,20 +137,7 @@ def course():
 @app.route('/ranking')
 def ranking(post_id=None):
     """Displays the latest post of all users."""
-    posts = query_db('''
-        select post.*, user.* from post, user
-        where post.author_id = user.user_id
-        order by post.publish_date desc limit ?''', [PER_PAGE])
-    
-    if post_id:
-        selected_post = query_db('''
-            select post.*, user.* from post, user
-            where post_id = ?
-            order by post.publish_date desc limit ?''', [post_id, PER_PAGE], one=True)
-        print selected_post
-        return render_template('ranking.html', posts=posts, selected_post=selected_post)
-    else:
-        return render_template('ranking.html', posts=posts)
+    return render_template('ranking.html')
 
 @app.route('/<username>')
 def user_timeline(username):
@@ -174,16 +161,59 @@ def user_timeline(username):
 
 @app.route('/quiz')
 def quiz():
-    """add a new post"""
-    return render_template('quiz.html')
+    """Displaying quiz for the selected Prof"""
+    
+    prof = request.args.get('prof')
+    
+    user_info = query_db('''SELECT * FROM user WHERE
+            user.user_id = ?''',
+            [session['user_id']],
+            one=True)
 
+    numOfQuiz = query_db('''SELECT len(*) FROM quiz WHERE
+            professor_id = ? ''',
+            [prof],
+            one=True)
+    
+    if user_info[prof + "_last_quiz"] == numOfQuiz:
+        return render_template('quiz.html', prof=prof)
 
-@app.route('/post_process', methods=['POST'])
-def post_process():
+    quiz = query_db('''SELECT * FROM quiz WHERE
+            professor_id = ? AND quiz_id = ?''',
+            [prof, user_info[prof + "_last_quiz"]+1],
+            one=True)
+
+    return render_template('quiz.html', prof=prof, quiz=quiz)
+
+@app.route('/quiz_processing', methods=['POST'])
+def quiz_processing():
     """Registers a new post"""
     if 'user_id' not in session:
         abort(401)
     if request.method == 'POST':
+        prof = request.form['prof']
+        
+        user_info = query_db('''SELECT * FROM user WHERE
+            user.user_id = ?''',
+            [session['user_id']],
+            one=True)
+
+        quiz = query_db('''SELECT * FROM quiz WHERE
+            professor_id = ? AND quiz_id = ?''',
+            [prof, user_info[prof + "_last_quiz"]+1],
+            one=True)
+        
+        #맞았을 때
+        #- prof_last_quiz값 업데이트
+        #- 점수 변경 (value 값 만큼)
+        #- total 값 변경.
+        #- 다음 퀴즈로 이동
+        
+        #틀렸을 때
+        #- 1점 감점. 
+        #- 다시 원래 페이지로 이동.
+        
+        """
         g.db.execute('''insert into 
                     post (author_id, title, text, publish_date, 
                         accident_date_from, accident_date_to, 
@@ -201,16 +231,15 @@ def post_process():
                         )
                     )
         g.db.commit()
-        flash('새 글이 등록되었습니다.')
-        
-        push_notification(get_last_post_id());
-    return redirect(url_for('public_request'))
+        """
+    
+    return redirect(url_for('quiz', prof=prof))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Logs the user in."""
     if g.user:
-        return redirect(url_for('timeline'))
+        return redirect(url_for('course'))
     error = None
     if request.method == 'POST':
         user = query_db('''select * from user where
@@ -231,7 +260,7 @@ def login():
 def register():
     """Registers the user."""
     if g.user:
-        return redirect(url_for('timeline'))
+        return redirect(url_for('course'))
     error = None
     if request.method == 'POST':
         if not request.form['username']:
