@@ -164,34 +164,35 @@ def quiz():
     """Displaying quiz for the selected Prof"""
     
     prof = request.args.get('prof')
+    error = request.args.get('error')
     
     user_info = query_db('''SELECT * FROM user WHERE
             user.user_id = ?''',
             [session['user_id']],
             one=True)
 
-    numOfQuiz = query_db('''SELECT len(*) FROM quiz WHERE
+    numOfQuiz = query_db('''SELECT count(*) FROM quiz WHERE
             professor_id = ? ''',
             [prof],
             one=True)
-    
-    if user_info[prof + "_last_quiz"] == numOfQuiz:
-        return render_template('quiz.html', prof=prof)
 
     quiz = query_db('''SELECT * FROM quiz WHERE
             professor_id = ? AND quiz_id = ?''',
             [prof, user_info[prof + "_last_quiz"]+1],
             one=True)
 
-    return render_template('quiz.html', prof=prof, quiz=quiz)
+    return render_template('quiz.html', prof=prof, quiz=quiz, error=error)
 
 @app.route('/quiz_processing', methods=['POST'])
 def quiz_processing():
     """Registers a new post"""
     if 'user_id' not in session:
         abort(401)
+    error = None
     if request.method == 'POST':
         prof = request.form['prof']
+        my_answer = "".join(request.form.getlist("answers"))
+        quiz_value = request.form['quiz_value']
         
         user_info = query_db('''SELECT * FROM user WHERE
             user.user_id = ?''',
@@ -203,37 +204,21 @@ def quiz_processing():
             [prof, user_info[prof + "_last_quiz"]+1],
             one=True)
         
-        #맞았을 때
-        #- prof_last_quiz값 업데이트
-        #- 점수 변경 (value 값 만큼)
-        #- total 값 변경.
-        #- 다음 퀴즈로 이동
-        
-        #틀렸을 때
-        #- 1점 감점. 
-        #- 다시 원래 페이지로 이동.
-        
-        """
-        g.db.execute('''insert into 
-                    post (author_id, title, text, publish_date, 
-                        accident_date_from, accident_date_to, 
-                        location_latitude, location_longitude)
-                    values (?, ?, ?, ?, ?, ?, ?, ?)''', 
-                        (
-                         session['user_id'], 
-                        request.form['title'],
-                        request.form['text'],
-                        int(time.time() + 9*60*60),
-                        request.form['accident_date_from'],
-                        request.form['accident_date_to'],
-                        request.form['location_latitude'],
-                        request.form['location_longitude']
-                        )
-                    )
+        #Check whether the answer is correct or not
+        if my_answer == unicode(quiz['correct_answer']):
+            g.db.execute("UPDATE user SET " + prof + "_last_quiz = " + prof + "_last_quiz+1 WHERE user_id =?", 
+                [session['user_id']])
+            g.db.execute("UPDATE user SET " + prof + "_point = " + prof + "_point + " + quiz_value + " WHERE user_id =?", 
+                [session['user_id']])
+            #TOTAL 값 변경을 여기서 할까요 말까요
+        else:
+            error = 'Wrong answer. You got -1 point!'
+            g.db.execute("UPDATE user SET " + prof + "_point = " + prof + "_point-1 WHERE user_id =?", 
+                [session['user_id']])
+
         g.db.commit()
-        """
     
-    return redirect(url_for('quiz', prof=prof))
+    return redirect(url_for('quiz', prof=prof, error=error))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

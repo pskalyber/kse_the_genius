@@ -5,7 +5,7 @@
 		<span>{{ prof }}'s Course</span>
 	</div>
 	
-	{% if error %}<div class=error><strong>Error:</strong> {{ error }}</div>{% endif %}
+	{% if error %}<div class=error><strong> {{ error }} </strong></div>{% endif %}
 
 	{% if quiz %}
 	<div class="bg-info">
@@ -20,39 +20,39 @@
 		<div class="form-group">
 		
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="answer1">
+				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox"> {{ quiz.answer1 }}
+						<input type="checkbox" name="answers" value="1"> {{ quiz.answer1 }}
 					</label>
 				</div>
 			</div>
 			
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="answer2">
+				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox"> {{ quiz.answer2 }}
+						<input type="checkbox" name="answers" value="2"> {{ quiz.answer2 }}
 					</label>
 				</div>
 			</div>
 			
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="answer3">
+				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox"> {{ quiz.answer3 }} 
+						<input type="checkbox" name="answers" value="3"> {{ quiz.answer3 }} 
 					</label>
 				</div>
 			</div>
 			
 			<div class="col-sm-offset-0 col-sm-12">
-				<div class="checkbox" class="form-control" name="answer4">
+				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox"> {{ quiz.answer4 }}
+						<input type="checkbox" name="answers" value="4"> {{ quiz.answer4 }}
 					</label>
 				</div>
 			</div>
 			
 			<input type="hidden" name="prof" value="{{ prof }}">
-			
+			<input type="hidden" name="quiz_value" value="{{ quiz.quiz_value }}">
 			<input type="hidden" name="user_id" value="{{ g.user.user_id }}">
 			
 		</div>
@@ -67,7 +67,7 @@
   	{% else %}
   	<div class="bg-success">
 		<blockquote>
-			<p>You finished all of {{ prof }}'s quizzes</p>
+			<p>Congratulation! You finished all of {{ prof }}'s quizzes!</p>
 			<!-- <footer>HINT: This is <cite title="Source Title"> xxx </cite> bhlablha</footer>  -->
 		</blockquote>
 	</div>
