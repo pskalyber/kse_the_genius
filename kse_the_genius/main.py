@@ -18,6 +18,7 @@ from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
+import collections
 
 # configuration -> app.config[] 로 활용 가능. 어떤 원리지?
 DATABASE = 'minitwit.db'
@@ -137,8 +138,50 @@ def course():
 @app.route('/ranking')
 def ranking(post_id=None):
     """Displays the latest post of all users."""
-    return render_template('ranking.html')
+    
+    total_score = collections.OrderedDict()
+    print "Lv1=============="
+    total_score['genius'] = getUserList(80, 100)
+    print "Lv2=============="
+    total_score['nerd'] = getUserList(60, 80)
+    print "Lv3=============="
+    total_score['smarty-pants'] = getUserList(40, 60)
+    print "Lv4=============="
+    total_score['eager_beaver'] = getUserList(20, 40)
+    print "Lv5=============="
+    total_score['Newbie'] = getUserList(0, 20)
+    return render_template('ranking.html', total_score = total_score)
 
+#과목별 만점
+MUNYI_MAX_POINT = ("munyi_point", 100.0)
+WCYOON_MAX_POINT = ("wcyoon_point", 100.0)
+UCLEE_MAX_POINT = ("uclee_point", 100.0)
+JAEGIL_MAX_POINT = ("jaegil_point", 100.0)
+AVIV_MAX_POINT = ("aviv_point", 100.0)
+KSE_MAX_POINT = ("kse_point", 100.0)
+TOTAL_MAX_POINT = ("total_point", 100.0)
+def getUserList(range_min, range_max):
+    """get user list for each course"""
+    
+    score = collections.OrderedDict()
+    score['munyi_point']=[]
+    score['wcyoon_point']=[]
+    score['uclee_point']=[]
+    score['jaegil_point']=[]
+    score['aviv_point']=[]
+    score['kse_point']=[]
+    score['total_point']=[]       
+
+    for PROF_POINT, MAX_POINT in (MUNYI_MAX_POINT, WCYOON_MAX_POINT, UCLEE_MAX_POINT, JAEGIL_MAX_POINT, AVIV_MAX_POINT, KSE_MAX_POINT, TOTAL_MAX_POINT):
+        print PROF_POINT, MAX_POINT, "----------"
+        users = query_db("SELECT username, " + PROF_POINT + " FROM user WHERE (" + PROF_POINT + " / ? * 100.0) > ? AND (" + PROF_POINT + " / ? * 100.0) <= ?", [MAX_POINT, range_min, MAX_POINT, range_max])
+        for user in users:
+            print user['username'], user[PROF_POINT] 
+            score[PROF_POINT].append(user)
+        # 여기서 왜 SQL에 직접 PROF_POINT 라고 넣어야 되고, ?를 대체하는 값으로 넣으면 안되지? 개빡치네!!!
+    
+    return score
+        
 @app.route('/<username>')
 def user_timeline(username):
     """Display's a users tweets."""
@@ -206,16 +249,28 @@ def quiz_processing():
         
         #Check whether the answer is correct or not
         if my_answer == unicode(quiz['correct_answer']):
-            g.db.execute("UPDATE user SET " + prof + "_last_quiz = " + prof + "_last_quiz+1 WHERE user_id =?", 
+            g.db.execute("UPDATE user SET " + prof + "_last_quiz = " \
+                + prof + "_last_quiz+1 WHERE user_id =?", 
                 [session['user_id']])
-            g.db.execute("UPDATE user SET " + prof + "_point = " + prof + "_point + " + quiz_value + " WHERE user_id =?", 
+            g.db.execute("UPDATE user SET " + prof + "_point = " \
+                + prof + "_point + " + quiz_value + " WHERE user_id =?", 
                 [session['user_id']])
-            #TOTAL 값 변경을 여기서 할까요 말까요
         else:
             error = 'Wrong answer. You got -1 point!'
-            g.db.execute("UPDATE user SET " + prof + "_point = " + prof + "_point-1 WHERE user_id =?", 
+            g.db.execute("UPDATE user SET " + prof + "_point = " \
+                + prof + "_point-1 WHERE user_id =?", 
                 [session['user_id']])
-
+        
+        g.db.execute('''UPDATE user SET total_point = 
+                munyi_point + 
+                wcyoon_point + 
+                uclee_point + 
+                jaegil_point + 
+                aviv_point + 
+                kse_point 
+                WHERE user_id =?''', 
+                [session['user_id']])
+        
         g.db.commit()
     
     return redirect(url_for('quiz', prof=prof, error=error))
