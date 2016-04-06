@@ -305,9 +305,8 @@ def register():
     if request.method == 'POST':
         if not request.form['username']:
             error = 'You have to enter a username'
-        elif not request.form['email'] or \
-                 '@' not in request.form['email']:
-            error = 'You have to enter a valid email address'
+        elif not request.form['name']:
+            error = 'You have to enter your Real Name (e.g., 홍길동 or Hong Gil Dong)'
         elif not request.form['password']:
             error = 'You have to enter a password'
         elif request.form['password'] != request.form['password2']:
@@ -316,8 +315,8 @@ def register():
             error = 'The username is already taken'
         else:
             g.db.execute('''insert into user (
-                username, email, pw_hash) values (?, ?, ?)''',
-                [request.form['username'], request.form['email'],
+                username, name, pw_hash) values (?, ?, ?)''',
+                [request.form['username'], request.form['name'],
                  generate_password_hash(request.form['password'])])
             g.db.commit()
             flash('You were successfully registered and can login now')
@@ -330,7 +329,7 @@ def logout():
     """Logs the user out."""
     flash('You were logged out')
     session.pop('user_id', None)
-    return redirect(url_for('public_request'))
+    return redirect(url_for('ranking'))
 
 
 # add some filters to jinja
