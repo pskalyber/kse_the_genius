@@ -22,7 +22,7 @@
 			<div class="col-sm-offset-0 col-sm-12">
 				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox" name="answers" value="1"> {{ quiz.answer1 }}
+						<input type="checkbox" name="answers" value="1"> {{ quiz.answer1 | safe }}
 					</label>
 				</div>
 			</div>
@@ -30,7 +30,7 @@
 			<div class="col-sm-offset-0 col-sm-12">
 				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox" name="answers" value="2"> {{ quiz.answer2 }}
+						<input type="checkbox" name="answers" value="2"> {{ quiz.answer2 | safe }}
 					</label>
 				</div>
 			</div>
@@ -38,7 +38,7 @@
 			<div class="col-sm-offset-0 col-sm-12">
 				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox" name="answers" value="3"> {{ quiz.answer3 }} 
+						<input type="checkbox" name="answers" value="3"> {{ quiz.answer3 | safe}} 
 					</label>
 				</div>
 			</div>
@@ -46,7 +46,7 @@
 			<div class="col-sm-offset-0 col-sm-12">
 				<div class="checkbox" class="form-control">
 					<label class="col-sm-12">
-						<input type="checkbox" name="answers" value="4"> {{ quiz.answer4 }}
+						<input type="checkbox" name="answers" value="4"> {{ quiz.answer4 | safe }}
 					</label>
 				</div>
 			</div>

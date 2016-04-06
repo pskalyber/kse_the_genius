@@ -95,38 +95,6 @@ def teardown_request(exception):
     if hasattr(g, 'db'):
         g.db.close()
 
-
-@app.route('/myinfo')
-def mypost():
-    """Shows a users information such as points of each course and total score.
-    """
-    if not g.user:
-        return redirect(url_for('ranking'))
-    return render_template('timeline.html', posts=query_db('''
-        select post.*, user.* from post, user
-        where post.author_id = user.user_id and (
-            user.user_id = ? )
-        order by post.publish_date desc limit ?''',
-        [session['user_id'], PER_PAGE]))
-
-@app.route('/test')
-def public_request(post_id=None):
-    """Displays the latest post of all users."""
-    posts = query_db('''
-        select post.*, user.* from post, user
-        where post.author_id = user.user_id
-        order by post.publish_date desc limit ?''', [PER_PAGE])
-    
-    if post_id:
-        selected_post = query_db('''
-            select post.*, user.* from post, user
-            where post_id = ?
-            order by post.publish_date desc limit ?''', [post_id, PER_PAGE], one=True)
-        print selected_post
-        return render_template('timeline.html', posts=posts, selected_post=selected_post)
-    else:
-        return render_template('timeline.html', posts=posts)
-
 @app.route('/course')
 def course():
     """Displays the course list"""
@@ -172,14 +140,26 @@ def getUserList(range_min, range_max):
 
     for PROF_POINT, MAX_POINT in (MUNYI_MAX_POINT, WCYOON_MAX_POINT, UCLEE_MAX_POINT, JAEGIL_MAX_POINT, AVIV_MAX_POINT, KSE_MAX_POINT, TOTAL_MAX_POINT):
         print PROF_POINT, MAX_POINT, "----------"
-        users = query_db("SELECT username, " + PROF_POINT + " FROM user WHERE (" + PROF_POINT + " / ? * 100.0) > ? AND (" + PROF_POINT + " / ? * 100.0) <= ?", [MAX_POINT, range_min, MAX_POINT, range_max])
+        users = query_db("SELECT username, " + PROF_POINT + " FROM user WHERE (" + \
+                         PROF_POINT + " / ? * 100.0) > ? AND (" + PROF_POINT + " / ? * 100.0) <= ?", 
+                         [MAX_POINT, range_min, MAX_POINT, range_max])
         for user in users:
             print user['username'], user[PROF_POINT] 
             score[PROF_POINT].append(user)
         # 여기서 왜 SQL에 직접 PROF_POINT 라고 넣어야 되고, ?를 대체하는 값으로 넣으면 안되지? 개빡치네!!!
     
     return score
-        
+
+@app.route('/myinfo')
+def myinfo():
+    """Shows a users information such as points of each course and total score.
+    """
+    if not g.user:
+        return redirect(url_for('ranking'))
+    myinfo = query_db('''SELECT * FROM user WHERE user_id=?''', [session['user_id']], one=True)
+    
+    return render_template('myinfo.html', myinfo=myinfo)
+
 @app.route('/<username>')
 def user_timeline(username):
     """Display's a users tweets."""
