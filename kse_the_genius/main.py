@@ -21,7 +21,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import collections
 
 # configuration -> app.config[] 로 활용 가능. 어떤 원리지?
-DATABASE = 'minitwit.db'
+DATABASE = 'kse.db'
 PER_PAGE = 10
 DEBUG = True
 SECRET_KEY = 'development key'
