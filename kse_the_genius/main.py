@@ -115,7 +115,7 @@ def ranking(post_id=None):
     print "Lv4=============="
     total_score['eager_beaver'] = getUserList(20, 40)
     print "Lv5=============="
-    total_score['Newbie'] = getUserList(0, 20)
+    total_score['newbie'] = getUserList(0, 20)
     return render_template('ranking.html', total_score = total_score)
 
 #과목별 만점
