@@ -96,14 +96,12 @@ def teardown_request(exception):
         g.db.close()
 
 
-@app.route('/mypost')
+@app.route('/myinfo')
 def mypost():
-    """Shows a users timeline or if no user is logged in it will
-    redirect to the public timeline.  This timeline shows the user's
-    messages as well as all the messages of followed users.
+    """Shows a users information such as points of each course and total score.
     """
     if not g.user:
-        return redirect(url_for('public_request'))
+        return redirect(url_for('ranking'))
     return render_template('timeline.html', posts=query_db('''
         select post.*, user.* from post, user
         where post.author_id = user.user_id and (

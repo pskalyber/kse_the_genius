@@ -10,7 +10,7 @@
 	{% if quiz %}
 	<div class="bg-info">
 		<blockquote>
-			<p>{{ quiz.quiz_id }}. {{ quiz.question }}</p>
+			<p>{{ quiz.quiz_id }}. {{ quiz.question | safe }}</p>
 			<!-- <footer>HINT: This is <cite title="Source Title"> xxx </cite> bhlablha</footer>  -->
 		</blockquote>
 	</div>
