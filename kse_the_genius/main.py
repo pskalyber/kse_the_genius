@@ -102,12 +102,12 @@ def course():
         return redirect(url_for('ranking'))
     return render_template('course.html')
 
-MUNYI_QUIZ_CNT = ["munyi_point", 0]
-WCYOON_QUIZ_CNT = ["wcyoon_point", 0]
-UCLEE_QUIZ_CNT = ["uclee_point", 0]
-JAEGIL_QUIZ_CNT = ["jaegil_point", 0]
-AVIV_QUIZ_CNT = ["aviv_point", 0]
-KSE_QUIZ_CNT = ["kse_point", 0]
+MUNYI_QUIZ_CNT = ["munyi", 0]
+WCYOON_QUIZ_CNT = ["wcyoon", 0]
+UCLEE_QUIZ_CNT = ["uclee", 0]
+JAEGIL_QUIZ_CNT = ["jaegil", 0]
+AVIV_QUIZ_CNT = ["aviv", 0]
+KSE_QUIZ_CNT = ["kse", 0]
 TOTAL_MAX_POINT = ["total_point", 0]
 
 @app.route('/')
@@ -136,23 +136,32 @@ def getUserList(lv_range_from, lv_range_to):
     """get participant list for each course"""
     
     score = collections.OrderedDict()
-    score['munyi_point']=[]
-    score['wcyoon_point']=[]
-    score['uclee_point']=[]
-    score['jaegil_point']=[]
-    score['aviv_point']=[]
-    score['kse_point']=[]
+    score['munyi']=[]
+    score['wcyoon']=[]
+    score['uclee']=[]
+    score['jaegil']=[]
+    score['aviv']=[]
+    score['kse']=[]
     score['total_point']=[]       
-    print "d", MUNYI_QUIZ_CNT
-    for PROF_POINT, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT, TOTAL_MAX_POINT):
-        print PROF_POINT, MAX_POINT, "----------"
-        users = query_db("SELECT username, " + PROF_POINT + " FROM user WHERE (" + \
-                         PROF_POINT + " / ? * 100.0) > ? AND (" + PROF_POINT + " / ? * 100.0) <= ? ORDER BY " + PROF_POINT + " DESC", 
-                         [MAX_POINT*1.0, lv_range_from, MAX_POINT*1.0, lv_range_to])
+
+    for PROF, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT):
+        print PROF, MAX_POINT, "-------------------------------"
+        users = query_db("SELECT username, " + PROF + "_last_quiz FROM user WHERE (" + \
+                         PROF + "_last_quiz*1.0 / ? * 100.0) > ? AND (" + PROF+ "_last_quiz*1.0 / ? * 100.0) <= ? ORDER BY " + PROF + "_last_quiz DESC", 
+                         [MAX_POINT, lv_range_from, MAX_POINT, lv_range_to])
         for user in users:
-            print user['username'], user[PROF_POINT] 
-            score[PROF_POINT].append(user)
+            print user['username'], user[PROF+"_last_quiz"] 
+            score[PROF].append(user)
         # 여기서 왜 SQL에 직접 PROF_POINT 라고 넣어야 되고, ?를 대체하는 값으로 넣으면 안되지? 개빡치네!!!
+    
+    print TOTAL_MAX_POINT[0], TOTAL_MAX_POINT[1]
+    users = query_db("SELECT username, " + TOTAL_MAX_POINT[0] + " FROM user WHERE (" + \
+                         TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) > ? AND (" + TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) <= ? ORDER BY " + TOTAL_MAX_POINT[0] + " DESC", 
+                         [TOTAL_MAX_POINT[1], lv_range_from, TOTAL_MAX_POINT[1], lv_range_to])
+    
+    for user in users:
+        print user['username'], user[TOTAL_MAX_POINT[0]] 
+        score[TOTAL_MAX_POINT[0]].append(user)
     
     return score
 
@@ -324,5 +333,5 @@ app.jinja_env.filters['gravatar'] = gravatar_url
 if __name__ == '__main__':
     init_db()
 
-    app.run(host="0.0.0.0", port=80, debug=True)
+    app.run(host="0.0.0.0", port=1218, debug=True)
     
