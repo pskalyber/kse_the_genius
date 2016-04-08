@@ -15,7 +15,8 @@
 	</div>
 
 	<!-- 전체 리스트 -->
-  	<table class="table table-hover">
+	<div class="table-responsive">
+  	<table class="table table-bordered table-hover">
 		<thead>
   			<tr style="background-color: #6ECCC4;">
   				<th></th>
@@ -34,24 +35,24 @@
 			{% for badge, score in total_score.items() %}
 			<tr>
 				<!-- 배지 -->
-				<td class="type hidden-xs">
+				<td class="col-md-1">
 					{% if badge=="newbie" %}
-						<img src="{{ url_for('static', filename='img/badges/badge_1_newbie.png') }}" alt="Newbie" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_1_newbie.png') }}" alt="Newbie" width="120px">
 					{% elif badge=="eager_beaver" %}
-						<img src="{{ url_for('static', filename='img/badges/badge_2_eager_beaver.png') }}" alt="Eager Beaver" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_2_eager_beaver.png') }}" alt="Eager Beaver" width="120px">
 					{% elif badge=="smarty-pants" %}
-						<img src="{{ url_for('static', filename='img/badges/badge_3_smarty-pants.png') }}" alt="Smarty Pants" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_3_smarty-pants.png') }}" alt="Smarty Pants" width="120px">
 					{% elif badge=="nerd" %}
-						<img src="{{ url_for('static', filename='img/badges/badge_4_nerd.png') }}" alt="Nerd" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_4_nerd.png') }}" alt="Nerd" width="120px">
 					{% elif badge=="genius" %}
-						<img src="{{ url_for('static', filename='img/badges/badge_5_genius.png') }}" alt="Genius" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_5_genius.png') }}" alt="Genius" width="120px">
 					{% endif %}
 				</td>
 				
 				{% for prof, rankers in score.items() %}
 					<!-- 과목별 순위 -->
 					
-					<td class="post-table-title">
+					<td class="post-table-title col-md-1">
 						{% for ranker in rankers %}
 						<a href="">
 							<span class="post-table-title">
@@ -70,5 +71,5 @@
 			{% endfor %}
   		</tbody>
 	</table>
-
+	</div>
 {% endblock %}
