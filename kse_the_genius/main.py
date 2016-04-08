@@ -234,7 +234,7 @@ def quiz_processing():
                 + prof + "_point + " + quiz_value + " WHERE user_id =?", 
                 [session['user_id']])
         else:
-            error = 'Wrong answer. You got -1 point!'
+            error = 'You got -1 point! Wrong answer or the answers might be more than one.)'
             g.db.execute("UPDATE user SET " + prof + "_point = " \
                 + prof + "_point-1 WHERE user_id =?", 
                 [session['user_id']])
