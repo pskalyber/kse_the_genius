@@ -16,7 +16,6 @@
 		{% if g.user %} 
 			<a href="{{ url_for('course') }}">Quiz Home</a> |
 			<a href="{{ url_for('ranking') }}">Ranking</a> |
-			<a href="{{ url_for('myinfo') }}">My info</a> |
 			<a href="{{ url_for('logout') }}">Logout ({{ g.user.username }})</a>
 		{% else %} 
 			<a href="{{ url_for('register') }}">Sign Up</a> | 

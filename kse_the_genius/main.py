@@ -27,9 +27,9 @@ DEBUG = True
 SECRET_KEY = 'development key'
 
 # create our little application :)
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = "/tmp")
 app.config.from_object(__name__)
-app.config.from_envvar('MINITWIT_SETTINGS', silent=True)
+app.config.from_envvar('KSE_SETTINGS', silent=True)
 
 
 def connect_db():
@@ -102,34 +102,38 @@ def course():
         return redirect(url_for('ranking'))
     return render_template('course.html')
 
+MUNYI_QUIZ_CNT = ["munyi_point", 0]
+WCYOON_QUIZ_CNT = ["wcyoon_point", 0]
+UCLEE_QUIZ_CNT = ["uclee_point", 0]
+JAEGIL_QUIZ_CNT = ["jaegil_point", 0]
+AVIV_QUIZ_CNT = ["aviv_point", 0]
+KSE_QUIZ_CNT = ["kse_point", 0]
+TOTAL_MAX_POINT = ["total_point", 0]
+
 @app.route('/')
 @app.route('/ranking')
 def ranking(post_id=None):
     """Displays the latest post of all users."""
     
+    MUNYI_QUIZ_CNT[1] = query_db('''SELECT count(id) FROM quiz WHERE professor_id="munyi"''', one=True)['count(id)']
+    WCYOON_QUIZ_CNT[1] = query_db('''SELECT count(id) FROM quiz WHERE professor_id="wcyoon"''', one=True)['count(id)']
+    UCLEE_QUIZ_CNT[1] = query_db('''SELECT count(id) FROM quiz WHERE professor_id="uclee"''', one=True)['count(id)']
+    JAEGIL_QUIZ_CNT[1] = query_db('''SELECT count(id) FROM quiz WHERE professor_id="jaegil"''', one=True)['count(id)']
+    AVIV_QUIZ_CNT[1] = query_db('''SELECT count(id) FROM quiz WHERE professor_id="aviv"''', one=True)['count(id)']
+    KSE_QUIZ_CNT[1] = query_db('''SELECT count(id) FROM quiz WHERE professor_id="kse"''', one=True)['count(id)']
+    TOTAL_MAX_POINT[1] = query_db('''SELECT SUM(quiz_value) FROM quiz''', one=True)['SUM(quiz_value)']
+
     total_score = collections.OrderedDict()
-    print "Lv1=============="
     total_score['genius'] = getUserList(80, 100)
-    print "Lv2=============="
     total_score['nerd'] = getUserList(60, 80)
-    print "Lv3=============="
     total_score['smarty-pants'] = getUserList(40, 60)
-    print "Lv4=============="
     total_score['eager_beaver'] = getUserList(20, 40)
-    print "Lv5=============="
     total_score['newbie'] = getUserList(0, 20)
     return render_template('ranking.html', total_score = total_score)
 
-#과목별 만점
-MUNYI_MAX_POINT = ("munyi_point", 100.0)
-WCYOON_MAX_POINT = ("wcyoon_point", 100.0)
-UCLEE_MAX_POINT = ("uclee_point", 100.0)
-JAEGIL_MAX_POINT = ("jaegil_point", 100.0)
-AVIV_MAX_POINT = ("aviv_point", 100.0)
-KSE_MAX_POINT = ("kse_point", 100.0)
-TOTAL_MAX_POINT = ("total_point", 100.0)
-def getUserList(range_min, range_max):
-    """get user list for each course"""
+
+def getUserList(lv_range_from, lv_range_to):
+    """get participant list for each course"""
     
     score = collections.OrderedDict()
     score['munyi_point']=[]
@@ -139,12 +143,12 @@ def getUserList(range_min, range_max):
     score['aviv_point']=[]
     score['kse_point']=[]
     score['total_point']=[]       
-
-    for PROF_POINT, MAX_POINT in (MUNYI_MAX_POINT, WCYOON_MAX_POINT, UCLEE_MAX_POINT, JAEGIL_MAX_POINT, AVIV_MAX_POINT, KSE_MAX_POINT, TOTAL_MAX_POINT):
+    print "d", MUNYI_QUIZ_CNT
+    for PROF_POINT, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT, TOTAL_MAX_POINT):
         print PROF_POINT, MAX_POINT, "----------"
         users = query_db("SELECT username, " + PROF_POINT + " FROM user WHERE (" + \
-                         PROF_POINT + " / ? * 100.0) > ? AND (" + PROF_POINT + " / ? * 100.0) <= ?", 
-                         [MAX_POINT, range_min, MAX_POINT, range_max])
+                         PROF_POINT + " / ? * 100.0) > ? AND (" + PROF_POINT + " / ? * 100.0) <= ? ORDER BY " + PROF_POINT + " DESC", 
+                         [MAX_POINT*1.0, lv_range_from, MAX_POINT*1.0, lv_range_to])
         for user in users:
             print user['username'], user[PROF_POINT] 
             score[PROF_POINT].append(user)

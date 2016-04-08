@@ -36,15 +36,15 @@
 				<!-- 배지 -->
 				<td class="type hidden-xs">
 					{% if badge=="newbie" %}
-						<img src="{{ url_for('static', filename='img/badge_1_newbie.png') }}" alt="Newbie" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_1_newbie.png') }}" alt="Newbie" width="100px">
 					{% elif badge=="eager_beaver" %}
-						<img src="{{ url_for('static', filename='img/badge_2_eager_beaver.png') }}" alt="Eager Beaver" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_2_eager_beaver.png') }}" alt="Eager Beaver" width="100px">
 					{% elif badge=="smarty-pants" %}
-						<img src="{{ url_for('static', filename='img/badge_3_smarty-pants.png') }}" alt="Smarty Pants" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_3_smarty-pants.png') }}" alt="Smarty Pants" width="100px">
 					{% elif badge=="nerd" %}
-						<img src="{{ url_for('static', filename='img/badge_4_nerd.png') }}" alt="Nerd" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_4_nerd.png') }}" alt="Nerd" width="100px">
 					{% elif badge=="genius" %}
-						<img src="{{ url_for('static', filename='img/badge_5_genius.png') }}" alt="Genius" width="100px">
+						<img src="{{ url_for('static', filename='img/badges/badge_5_genius.png') }}" alt="Genius" width="100px">
 					{% endif %}
 				</td>
 				
@@ -57,7 +57,7 @@
 							<span class="post-table-title">
 								{{ ranker['username'] }}
 								{% if prof == 'total_point' %}
-									{{ ranker['total_point'] }}
+									({{ ranker['total_point'] }} Points)
 								{% endif %}
 							</span>
 						</a>
