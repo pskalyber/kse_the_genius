@@ -147,7 +147,7 @@ def getUserList(lv_range_from, lv_range_to):
     for PROF, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT):
         print PROF, MAX_POINT, "-------------------------------"
         users = query_db("SELECT username, " + PROF + "_last_quiz FROM user WHERE (" + \
-                         PROF + "_last_quiz*1.0 / ? * 100.0) > ? AND (" + PROF+ "_last_quiz*1.0 / ? * 100.0) <= ? ORDER BY " + PROF + "_last_quiz DESC", 
+                         PROF + "_last_quiz*1.0 / ? * 100.0) > ? AND (" + PROF+ "_last_quiz*1.0 / ? * 100.0) <= ? ORDER BY " + PROF + "_last_quiz DESC, " + PROF + "_point DESC", 
                          [MAX_POINT, lv_range_from, MAX_POINT, lv_range_to])
         for user in users:
             print user['username'], user[PROF+"_last_quiz"] 
