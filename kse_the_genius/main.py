@@ -98,6 +98,8 @@ def teardown_request(exception):
 @app.route('/course')
 def course():
     """Displays the course list"""
+    if not g.user:
+        return redirect(url_for('ranking'))
     return render_template('course.html')
 
 @app.route('/')
@@ -234,7 +236,7 @@ def quiz_processing():
                 + prof + "_point + " + quiz_value + " WHERE user_id =?", 
                 [session['user_id']])
         else:
-            error = 'You got -1 point! Wrong answer or the answers might be more than one.)'
+            error = 'you got -1 point! Your answer may be either wrong or there might be more than one correct answer.)'
             g.db.execute("UPDATE user SET " + prof + "_point = " \
                 + prof + "_point-1 WHERE user_id =?", 
                 [session['user_id']])
