@@ -54,14 +54,16 @@
 					
 					<td class="post-table-title col-md-1">
 						{% for ranker in rankers %}
-						<a href="">
 							<span class="post-table-title">
-								{{ ranker['username'] }}
-								{% if prof == 'total_point' %}
-									({{ ranker['total_point'] }} Points)
+								{% if g.user['username'] == ranker['username'] %}
+									<span class="bg-info"><strong>{{ ranker['username'] }}</strong></span>
+								{% else %}
+									{{ ranker['username'] }}
+									{% if prof == 'total_point' %}
+										({{ ranker['total_point'] }} Points)
+									{% endif %}
 								{% endif %}
 							</span>
-						</a>
 						<br>
 						{% endfor %}
 					</td>
