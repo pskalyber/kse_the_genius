@@ -56,10 +56,11 @@
 						{% for ranker in rankers %}
 							<span class="post-table-title">
 								{% if g.user['username'] == ranker['username'] %}
-									<span class="bg-info"><strong>{{ ranker['username'] }}</strong></span>
-									{% if prof == 'total_point' %}
-										({{ ranker['total_point'] }} Points)
-									{% endif %}
+									<span class="bg-info"><strong>{{ ranker['username'] }}
+										{% if prof == 'total_point' %}
+											({{ ranker['total_point'] }} Points)
+										{% endif %}
+									</strong></span>
 								{% else %}
 									{{ ranker['username'] }}
 									{% if prof == 'total_point' %}
