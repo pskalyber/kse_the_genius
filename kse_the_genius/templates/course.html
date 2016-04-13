@@ -26,6 +26,29 @@
   			</tr>
   		</thead>
   		<tbody>
+  		
+  			<!-- 학과 상식 -->
+			<tr class="success">
+				<td class="type hidden-xs">
+					<strong><a href="{{ url_for('quiz', prof='kse') }}">KSE</a></strong>
+				</td>
+				<td class="post-table-title">
+					<a href="{{ url_for('quiz', prof='kse') }}">
+						<span class="mobile-post-table-title hidden-xs">Section KSE Common Sense</span>
+						
+						<!-- For Mobile -->
+						<div class="visible-xs mobile-post-table-name">
+							<strong>
+								<span class="post-table-status">
+									Section KSE Common Sense
+								</span>
+							</strong>
+						</div>
+						<!-- / For Mobile -->
+					</a>
+				</td>
+			</tr>
+			
   			<!-- 이문용 교수님 -->
 			<tr class="info">
 				<td class="type hidden-xs">
@@ -145,27 +168,7 @@
 				</td>
 			</tr>
 			
-			<!-- 학과 상식 -->
-			<tr class="success">
-				<td class="type hidden-xs">
-					<strong><a href="{{ url_for('quiz', prof='kse') }}">KSE</a></strong>
-				</td>
-				<td class="post-table-title">
-					<a href="{{ url_for('quiz', prof='kse') }}">
-						<span class="mobile-post-table-title hidden-xs">Section KSE Common Sense</span>
-						
-						<!-- For Mobile -->
-						<div class="visible-xs mobile-post-table-name">
-							<strong>
-								<span class="post-table-status">
-									Section KSE Common Sense
-								</span>
-							</strong>
-						</div>
-						<!-- / For Mobile -->
-					</a>
-				</td>
-			</tr>
+			
   		</tbody>
 	</table>
 
