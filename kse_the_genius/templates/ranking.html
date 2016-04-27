@@ -93,14 +93,19 @@
 										{{ ranker['class'] }}
 									</span>&nbsp;
 
-									{% if prof == 'total_point' and badge=="genius" %}
-										<a href="#" data-toggle="tooltip" title="{{ ranker['name'] }}">
-										{{ ranker['username'] }}
-										</a>
+									{% if prof == 'total_point' %}
+										{% if badge=="genius" %}
+											<a href="#" data-toggle="tooltip" title="{{ ranker['name'] }}">
+											{{ ranker['username'] }}
+											</a>
+											({{ ranker['total_point'] }} Points)
+										{% else %}
+											{{ ranker['username'] }}
+											({{ ranker['total_point'] }} Points)
+										{% endif %}
 									{% else %}
 										{{ ranker['username'] }}
 									{% endif %}
-									({{ ranker['total_point'] }} Points)
 									
 								{% endif %}
 							</span>
