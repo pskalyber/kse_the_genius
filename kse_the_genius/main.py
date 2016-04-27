@@ -26,7 +26,8 @@ DEBUG = True
 SECRET_KEY = 'development key'
 
 # create our little application :)
-app = Flask(__name__, static_url_path = "/tmp")
+#app = Flask(__name__, static_url_path = "/tmp")
+app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('KSE_SETTINGS', silent=True)
 
@@ -144,22 +145,18 @@ def getUserList(lv_range_from, lv_range_to):
     score['total_point']=[]       
 
     for PROF, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT):
-        print PROF, MAX_POINT, "-------------------------------"
-        users = query_db("SELECT username, " + PROF + "_last_quiz FROM user WHERE (" + \
+        users = query_db("SELECT class, username, " + PROF + "_last_quiz FROM user WHERE (" + \
                          PROF + "_last_quiz*1.0 / ? * 100.0) > ? AND (" + PROF+ "_last_quiz*1.0 / ? * 100.0) <= ? ORDER BY " + PROF + "_last_quiz DESC, " + PROF + "_point DESC", 
                          [MAX_POINT, lv_range_from, MAX_POINT, lv_range_to])
         for user in users:
-            print user['username'], user[PROF+"_last_quiz"] 
             score[PROF].append(user)
         # 여기서 왜 SQL에 직접 PROF_POINT 라고 넣어야 되고, ?를 대체하는 값으로 넣으면 안되지? 개빡치네!!!
     
-    print TOTAL_MAX_POINT[0], TOTAL_MAX_POINT[1]
-    users = query_db("SELECT username, " + TOTAL_MAX_POINT[0] + " FROM user WHERE (" + \
+    users = query_db("SELECT class, username, " + TOTAL_MAX_POINT[0] + " FROM user WHERE (" + \
                          TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) > ? AND (" + TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) <= ? ORDER BY " + TOTAL_MAX_POINT[0] + " DESC", 
                          [TOTAL_MAX_POINT[1], lv_range_from, TOTAL_MAX_POINT[1], lv_range_to])
     
     for user in users:
-        print user['username'], user[TOTAL_MAX_POINT[0]] 
         score[TOTAL_MAX_POINT[0]].append(user)
     
     return score

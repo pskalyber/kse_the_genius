@@ -6,22 +6,41 @@
 	<meta name="viewport"
 		content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>{% block title %}Welcome{% endblock %} | KSE THE GENIUS</title>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 	
 </head>
 <div class="page">
 	<h1>KSE THE GENIUS</h1>
-	<div class="navigation">
+
+	<ol class="breadcrumb">
 		{% if g.user %} 
-			<a href="{{ url_for('course') }}">Quiz Home</a> |
-			<a href="{{ url_for('ranking') }}">Ranking</a> |
-			<a href="{{ url_for('logout') }}">Logout ({{ g.user.username }})</a>
+		<li class="active"><a href="{{ url_for('course') }}">Quiz Home</a></li>
+		<li class="active"><a href="{{ url_for('ranking') }}">Ranking</a></li>
+		
+		<!-- 
+		<li class="dropdown"><a href="#" class="dropdown-toggle"
+			data-toggle="dropdown" role="button" aria-haspopup="true"
+			aria-expanded="false">Ranking <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="{{ url_for('ranking') }}">All</a></li>
+				<li role="separator" class="divider"></li>
+				<li><a href="#">Class A</a></li>
+				<li><a href="#">Class B</a></li>
+				<li><a href="#">Class C</a></li>
+				<li><a href="#">Class D</a></li>
+			</ul>
+		</li>
+		 -->
+		
+		<li><a href="{{ url_for('logout') }}">Logout ({{ g.user.username }})</a></li>
 		{% else %} 
-			<a href="{{ url_for('register') }}">Sign Up</a> | 
-			<a href="{{ url_for('login') }}">Sign In</a> 
+		<li class="active"><a href="{{ url_for('register') }}">Sign Up</a></li>
+		<li><a href="{{ url_for('login') }}">Sign In</a></li>
 		{% endif %}
-	</div>
+	</ol>
 	
 	{% with flashes = get_flashed_messages() %} {% if flashes %}
 	<ul class="flashes">

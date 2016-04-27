@@ -56,12 +56,42 @@
 						{% for ranker in rankers %}
 							<span class="post-table-title">
 								{% if g.user['username'] == ranker['username'] %}
-									<span class="bg-info"><strong>{{ ranker['username'] }}
-										{% if prof == 'total_point' %}
-											({{ ranker['total_point'] }} Points)
-										{% endif %}
-									</strong></span>
+									{% if ranker['class'] == 'A' %}
+										<span class="label label-danger">
+									{% elif ranker['class'] == 'B' %}
+										<span class="label label-warning">
+									{% elif ranker['class'] == 'C' %}
+										<span class="label label-info">
+									{% elif ranker['class'] == 'D' %}
+										<span class="label label-primary">
+									{% else %}
+										<span class="label label-default">
+									{% endif %}
+										{{ ranker['class'] }}
+									</span>&nbsp;
+										
+									<strong>
+									<span class="label label-success">{{ ranker['username'] }}
+									{% if prof == 'total_point' %}
+										({{ ranker['total_point'] }} Points)
+									{% endif %}
+									</strong>
+									</span>
 								{% else %}
+									{% if ranker['class'] == 'A' %}
+										<span class="label label-danger">
+									{% elif ranker['class'] == 'B' %}
+										<span class="label label-warning">
+									{% elif ranker['class'] == 'C' %}
+										<span class="label label-info">
+									{% elif ranker['class'] == 'D' %}
+										<span class="label label-primary">
+									{% else %}
+										<span class="label label-default">
+									{% endif %}
+										{{ ranker['class'] }}
+									</span>&nbsp;
+									
 									{{ ranker['username'] }}
 									{% if prof == 'total_point' %}
 										({{ ranker['total_point'] }} Points)
