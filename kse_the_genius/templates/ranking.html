@@ -31,7 +31,6 @@
   		</thead>
   		<tbody>
 			
-			<!-- 레벨1 -->
 			{% for badge, score in total_score.items() %}
 			<tr>
 				<!-- 배지 -->
@@ -69,14 +68,16 @@
 									{% endif %}
 										{{ ranker['class'] }}
 									</span>&nbsp;
-										
+									
 									<strong>
 									<span class="label label-success">{{ ranker['username'] }}
+									
 									{% if prof == 'total_point' %}
 										({{ ranker['total_point'] }} Points)
 									{% endif %}
-									</strong>
 									</span>
+									</strong>
+
 								{% else %}
 									{% if ranker['class'] == 'A' %}
 										<span class="label label-danger">
@@ -91,11 +92,16 @@
 									{% endif %}
 										{{ ranker['class'] }}
 									</span>&nbsp;
-									
-									{{ ranker['username'] }}
-									{% if prof == 'total_point' %}
-										({{ ranker['total_point'] }} Points)
+
+									{% if prof == 'total_point' and badge=="genius" %}
+										<a href="#" data-toggle="tooltip" title="{{ ranker['name'] }}">
+										{{ ranker['username'] }}
+										</a>
+									{% else %}
+										{{ ranker['username'] }}
 									{% endif %}
+									({{ ranker['total_point'] }} Points)
+									
 								{% endif %}
 							</span>
 						<br>
@@ -107,5 +113,6 @@
 			{% endfor %}
   		</tbody>
 	</table>
-	</div>
+	</div>    
+    
 {% endblock %}
