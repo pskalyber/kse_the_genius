@@ -22,27 +22,25 @@
 
 	<ol class="breadcrumb">
 		{% if g.user %} 
-		<li class="active"><a href="{{ url_for('course') }}">Quiz Home</a></li>
-		<li class="active"><a href="{{ url_for('ranking') }}">Ranking</a></li>
+		<li><a href="{{ url_for('course') }}">Quiz Home</a></li>
 		
-		<!-- 
 		<li class="dropdown"><a href="#" class="dropdown-toggle"
 			data-toggle="dropdown" role="button" aria-haspopup="true"
 			aria-expanded="false">Ranking <span class="caret"></span></a>
 			<ul class="dropdown-menu">
 				<li><a href="{{ url_for('ranking') }}">All</a></li>
 				<li role="separator" class="divider"></li>
-				<li><a href="#">Class A</a></li>
-				<li><a href="#">Class B</a></li>
-				<li><a href="#">Class C</a></li>
-				<li><a href="#">Class D</a></li>
+				<li><a href="{{ url_for('ranking', class_id='A') }}">Class A</a></li>
+				<li><a href="{{ url_for('ranking', class_id='B') }}">Class B</a></li>
+				<li><a href="{{ url_for('ranking', class_id='C') }}">Class C</a></li>
+				<li><a href="{{ url_for('ranking', class_id='D') }}">Class D</a></li>
+				<li><a href="{{ url_for('ranking', class_id='E') }}">Class E</a></li>
 			</ul>
 		</li>
-		 -->
 		
 		<li><a href="{{ url_for('logout') }}">Logout ({{ g.user.username }})</a></li>
 		{% else %} 
-		<li class="active"><a href="{{ url_for('register') }}">Sign Up</a></li>
+		<li><a href="{{ url_for('register') }}">Sign Up</a></li>
 		<li><a href="{{ url_for('login') }}">Sign In</a></li>
 		{% endif %}
 	</ol>

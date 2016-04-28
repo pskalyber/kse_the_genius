@@ -112,7 +112,8 @@ TOTAL_MAX_POINT = ["total_point", 0]
 
 @app.route('/')
 @app.route('/ranking')
-def ranking(post_id=None):
+@app.route('/ranking/<class_id>')
+def ranking(class_id=None):
     """Displays the latest post of all users."""
     
     MUNYI_QUIZ_CNT[1] = query_db('''SELECT count(id) FROM quiz WHERE professor_id="munyi"''', one=True)['count(id)']
@@ -124,17 +125,17 @@ def ranking(post_id=None):
     TOTAL_MAX_POINT[1] = query_db('''SELECT SUM(quiz_value) FROM quiz''', one=True)['SUM(quiz_value)']
 
     total_score = collections.OrderedDict()
-    total_score['genius'] = getUserList(80, 100)
-    total_score['nerd'] = getUserList(60, 80)
-    total_score['smarty-pants'] = getUserList(40, 60)
-    total_score['eager_beaver'] = getUserList(20, 40)
-    total_score['newbie'] = getUserList(0, 20)
+    total_score['genius'] = getUserList(80, 100, class_id)
+    total_score['nerd'] = getUserList(60, 80, class_id)
+    total_score['smarty-pants'] = getUserList(40, 60, class_id)
+    total_score['eager_beaver'] = getUserList(20, 40, class_id)
+    total_score['newbie'] = getUserList(0, 20, class_id)
     return render_template('ranking.html', total_score = total_score)
 
 
-def getUserList(lv_range_from, lv_range_to):
+def getUserList(lv_range_from, lv_range_to, class_id=None):
     """get participant list for each course"""
-    
+
     score = collections.OrderedDict()
     score['munyi']=[]
     score['wcyoon']=[]
@@ -144,18 +145,31 @@ def getUserList(lv_range_from, lv_range_to):
     score['kse']=[]
     score['total_point']=[]       
 
-    for PROF, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT):
-        users = query_db("SELECT class, username, " + PROF + "_last_quiz FROM user WHERE (" + \
-                         PROF + "_last_quiz*1.0 / ? * 100.0) > ? AND (" + PROF+ "_last_quiz*1.0 / ? * 100.0) <= ? ORDER BY " + PROF + "_last_quiz DESC, " + PROF + "_point DESC", 
-                         [MAX_POINT, lv_range_from, MAX_POINT, lv_range_to])
-        for user in users:
-            score[PROF].append(user)
-        # 여기서 왜 SQL에 직접 PROF_POINT 라고 넣어야 되고, ?를 대체하는 값으로 넣으면 안되지? 개빡치네!!!
-    
-    users = query_db("SELECT name, class, username, " + TOTAL_MAX_POINT[0] + " FROM user WHERE (" + \
-                         TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) > ? AND (" + TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) <= ? ORDER BY " + TOTAL_MAX_POINT[0] + " DESC", 
-                         [TOTAL_MAX_POINT[1], lv_range_from, TOTAL_MAX_POINT[1], lv_range_to])
-    
+    if class_id == None:
+        for PROF, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT):
+            users = query_db("SELECT class, username, " + PROF + "_last_quiz FROM user WHERE (" + \
+                             PROF + "_last_quiz*1.0 / ? * 100.0) > ? AND (" + PROF+ "_last_quiz*1.0 / ? * 100.0) <= ? ORDER BY " + PROF + "_last_quiz DESC, " + PROF + "_point DESC", 
+                             [MAX_POINT, lv_range_from, MAX_POINT, lv_range_to])
+            for user in users:
+                score[PROF].append(user)
+            # 여기서 왜 SQL에 직접 PROF_POINT 라고 넣어야 되고, ?를 대체하는 값으로 넣으면 안되지? 개빡치네!!!
+        
+        users = query_db("SELECT name, class, username, " + TOTAL_MAX_POINT[0] + " FROM user WHERE (" + \
+                             TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) > ? AND (" + TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) <= ? ORDER BY " + TOTAL_MAX_POINT[0] + " DESC", 
+                             [TOTAL_MAX_POINT[1], lv_range_from, TOTAL_MAX_POINT[1], lv_range_to])
+    else:
+        for PROF, MAX_POINT in (MUNYI_QUIZ_CNT, WCYOON_QUIZ_CNT, UCLEE_QUIZ_CNT, JAEGIL_QUIZ_CNT, AVIV_QUIZ_CNT, KSE_QUIZ_CNT):
+            users = query_db("SELECT class, username, " + PROF + "_last_quiz FROM user WHERE CLASS=? AND (" + \
+                             PROF + "_last_quiz*1.0 / ? * 100.0) > ? AND (" + PROF+ "_last_quiz*1.0 / ? * 100.0) <= ? ORDER BY " + PROF + "_last_quiz DESC, " + PROF + "_point DESC", 
+                             [class_id, MAX_POINT, lv_range_from, MAX_POINT, lv_range_to])
+            for user in users:
+                score[PROF].append(user)
+            # 여기서 왜 SQL에 직접 PROF_POINT 라고 넣어야 되고, ?를 대체하는 값으로 넣으면 안되지? 개빡치네!!!
+        
+        users = query_db("SELECT name, class, username, " + TOTAL_MAX_POINT[0] + " FROM user WHERE CLASS=? AND ("  + \
+                             TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) > ? AND (" + TOTAL_MAX_POINT[0] + "*1.0 / ? * 100.0) <= ? ORDER BY " + TOTAL_MAX_POINT[0] + " DESC", 
+                             [class_id, TOTAL_MAX_POINT[1], lv_range_from, TOTAL_MAX_POINT[1], lv_range_to])
+        
     for user in users:
         score[TOTAL_MAX_POINT[0]].append(user)
     
